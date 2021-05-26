@@ -1,7 +1,9 @@
 from matplotlib.backends.backend_qt5 import ConfigureSubplotsQt
 import matplotlib.pyplot as plt;
 from datetime import date
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtGui import * 
+from PyQt5.QtWidgets import * 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from datetime import datetime;
 from matplotlib.figure import Figure;
@@ -45,14 +47,21 @@ class Ui_MainWindow(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.horizontalLayoutWidget)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.lineEdit = QtWidgets.QLineEdit(self.horizontalLayoutWidget)
-        self.lineEdit.setInputMask("")
         self.lineEdit.setText("")
         self.horizontalLayout.addWidget(self.lineEdit)
         self.pushButton = QtWidgets.QPushButton(self.horizontalLayoutWidget)
+        self.pushButton.clicked.connect(lambda: self.newStock())
         self.horizontalLayout.addWidget(self.pushButton)
         self.widget_2 = QtWidgets.QWidget(self.centralwidget)
         self.widget_2.setGeometry(QtCore.QRect(140, 0, 860, 601))
         self.canvasLayout = QtWidgets.QHBoxLayout(self.widget_2)
+
+        self.label = QtWidgets.QLabel()
+        self.label.setText("""Hallo und Willkommen zu Stock Visualizer.\n\nDu kannst hier Aktien anschauen. Links siehst du deine Aktien und unten kannst du welche hinzufügen.""")
+        self.label.setFont(QFont('Arial', 10))
+
+        self.canvasLayout.addWidget(self.label)
+
         MainWindow.setCentralWidget(self.centralwidget)
     
         MainWindow.setWindowTitle("Stock Visualizer")
@@ -61,15 +70,11 @@ class Ui_MainWindow(object):
         MainWindow.show()
     def init_stocks(self):
         for stock in config.getstocks():
-            self.btn = QtWidgets.QPushButton('{}'.format(stock), self.verticalLayoutWidget)
+            self.btn = QtWidgets.QPushButton('{}'.format(stock), self.scrollAreaWidgetContents)
             text = self.btn.text()
             self.btn.clicked.connect(lambda ch, text=text : self.newStockView("{}".format(text)))
             self.verticalLayout.addWidget(self.btn)
-            # self.stock.clicked.connect(lambda: self.newStockView(self.stock.text()))
             
-            
-            
-
     def createCanvas(self,sc):
         try:
             self.clearLayout(self.canvasLayout)
@@ -90,3 +95,11 @@ class Ui_MainWindow(object):
                     widget.deleteLater()
                 else:
                     self.clearLayout(item.layout())
+    def newStock(self):
+        stock = self.lineEdit.text()
+        config.addstock(stock)
+        self.lineEdit.setText("")
+        self.btn = QtWidgets.QPushButton('{}'.format(stock), self.scrollAreaWidgetContents)
+        text = self.btn.text()
+        self.btn.clicked.connect(lambda ch, text=text : self.newStockView("{}".format(text)))
+        self.verticalLayout.addWidget(self.btn)

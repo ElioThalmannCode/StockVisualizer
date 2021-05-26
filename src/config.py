@@ -1,4 +1,3 @@
-import configparser
 import os
 import json
 
@@ -10,7 +9,7 @@ class config:
     def create_config():
 
         firstConfig = {
-    "stocks" : ["BTC-USD","ETH-USD","AAPL","TSLA","NIO"]
+    "stocks" : ["BTC-USD","ETH-USD","AAPL","TSLA","NIO","MSFT","GOOGL","AMZN"]
 }
         firstConfig = json.dumps(firstConfig)
 
@@ -21,4 +20,9 @@ class config:
             data = json.load(jsonfile)
         print("Read successful")
         return(data["stocks"])
-    
+    def addstock(stock):
+        with open("config.conf", "r") as jsonfile:
+            data = json.load(jsonfile)
+            data["stocks"].append(stock) 
+        with open("config.conf", "w") as jsonfile:
+            json.dump(data,jsonfile)
