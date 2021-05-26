@@ -64,7 +64,7 @@ class Ui_MainWindow(object):
 
         MainWindow.setCentralWidget(self.centralwidget)
     
-        MainWindow.setWindowTitle("Stock Visualizer")
+        MainWindow.setWindowTitle("StockVisualizer")
         self.pushButton.setText("Add Stock")
         self.init_stocks()
         MainWindow.show()
